@@ -4,9 +4,9 @@
 #include <stdio.h>
 #include <gl/glew.h>
 
-Mesh* CreateMesh(const float* vertices, const float* indices, long vertexCount, long indiceCount)
+Mesh CreateMesh(const float* vertices, const float* indices, long vertexCount, long indiceCount)
 {
-	Mesh* mesh = malloc(sizeof(Mesh));
+	Mesh mesh = malloc(sizeof(Mesh));
 	if (!mesh)
 		return NULL;
 
@@ -30,7 +30,7 @@ Mesh* CreateMesh(const float* vertices, const float* indices, long vertexCount, 
 	return mesh;
 }
 
-void SetMesh(Mesh* mesh, const float* vertices, const float* indices, long vertexCount, long indiceCount)
+void SetMesh(Mesh mesh, const float* vertices, const float* indices, long vertexCount, long indiceCount)
 {
 	glGenVertexArrays(1, &mesh->vao);
 	glBindVertexArray(mesh->vao);
@@ -48,13 +48,13 @@ void SetMesh(Mesh* mesh, const float* vertices, const float* indices, long verte
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indiceCount * sizeof(unsigned int), indices, GL_STATIC_DRAW);
 }
 
-void BindMesh(const Mesh* mesh)
+void BindMesh(const Mesh mesh)
 {
 	glBindVertexArray(mesh->vao);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->ibo);
 }
 
-void DeleteMesh(const Mesh* mesh)
+void DeleteMesh(const Mesh mesh)
 {
 	glDeleteVertexArrays(1, &mesh->vao);
 

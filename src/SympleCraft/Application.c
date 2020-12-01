@@ -2,6 +2,8 @@
 #include <gl/glew.h>
 #include <glfw/glfw3.h>
 
+#include "SympleCraft/Math/Vector.h"
+#include "SympleCraft/Math/Matrix.h"
 #include "SympleCraft/Renderer.h"
 #include "SympleCraft/Shader.h"
 #include "SympleCraft/Mesh.h"
@@ -58,10 +60,12 @@ int main()
 		0, 2, 3
 	};
 
-	Mesh* mesh = CreateMesh(vertices, indices, 4, 6);
+	Mesh mesh = CreateMesh(vertices, indices, 4, 6);
+	//Vector color = CreateVector3(0, 1, 0);
 
-	GLuint shader = CreateShader("res/shaders/main.vsh", "res/shaders/main.fsh");
-	glUseProgram(shader);
+	Shader shader = CreateShader("res/shaders/main.vsh", "res/shaders/main.fsh");
+	BindShader(shader);
+	//SetShaderUniformVec(shader, "uCol", color);
 
 	SetBackgroundColor(0.25f, 0.25f, 0.25f, 1.0f);
 	while (!glfwWindowShouldClose(window))
@@ -73,8 +77,6 @@ int main()
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
-	DeleteMesh(mesh);
-	glDeleteProgram(shader);
 	
 	glfwTerminate();
 }

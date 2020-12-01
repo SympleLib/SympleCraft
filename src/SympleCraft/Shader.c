@@ -5,7 +5,7 @@
 #include <string.h>
 #include <gl/glew.h>
 
-unsigned int CreateShader(const char* vertFile, const char* fragFile)
+Shader CreateShader(const char* vertFile, const char* fragFile)
 {
 	char* vertexSource;
 	char* fragmentSource;
@@ -109,5 +109,40 @@ unsigned int CreateShader(const char* vertFile, const char* fragFile)
 
 		glDeleteShader(vert);
 		glDeleteShader(frag);
+
+		free(vertexSource);
+		free(fragmentSource);
 	}
+}
+
+void BindShader(Shader shader)
+{
+	glUseProgram(shader);
+}
+
+void DeleteShader(Shader shader)
+{
+	glDeleteProgram(shader);
+}
+
+int GetUniformLocation(Shader shader, const char* name)
+{
+	return glGetUniformLocation(shader, name);
+}
+
+void SetShaderUniformi(Shader shader, const char* name, int value)
+{
+	glUniform1i(GetUniformLocation(shader, name), value);
+}
+void SetShaderUniformf(Shader shader, const char* name, float value)
+{
+	glUniform1f(GetUniformLocation(shader, name), value);
+}
+void SetShaderUniformVec(Shader shader, const char* name, Vector vector)
+{
+	glUniform4f(GetUniformLocation(shader, name), vector->x, vector->y, vector->z, vector->w);
+}
+void SetShaderUniformMat(Shader shader, const char* name, Matrix matrix)
+{
+	glUniformMatrix4fv(GetUniformLocation(shader, name), 16, GL_TRUE, matrix);
 }
