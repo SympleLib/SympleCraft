@@ -3,7 +3,10 @@
 #include "SympleCraft/Math/Vector.h"
 #include "SympleCraft/Math/Matrix.h"
 
-typedef unsigned int Shader;
+typedef struct Shader
+{
+	unsigned int Program, Vertex, Fragment;
+} *Shader;
 
 Shader CreateShader(const char* vertFile, const char* fragFile);
 void BindShader(Shader shader);

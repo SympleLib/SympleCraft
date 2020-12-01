@@ -1,6 +1,7 @@
 #include "SympleCraft/Math/Matrix.h"
 
 #include <malloc.h>
+#include <stdio.h>
 #include <math.h>
 
 Matrix CreateMatrix()
@@ -24,7 +25,7 @@ void DeleteMatrix(const Matrix matrix)
 	free(matrix);
 }
 
-Matrix TranslateMatrix(Vector translation)
+Matrix TranslateMatrix(const Vector translation)
 {
 	Matrix matrix = CreateMatrix();
 
@@ -35,7 +36,7 @@ Matrix TranslateMatrix(Vector translation)
 	return matrix;
 }
 
-Matrix RotateMatrix(float angle, Vector axis)
+Matrix RotateMatrix(float angle, const Vector axis)
 {
 	Matrix matrix = CreateMatrix();
 
@@ -56,7 +57,7 @@ Matrix RotateMatrix(float angle, Vector axis)
 	return matrix;
 }
 
-Matrix ScaleMatrix(Vector scale)
+Matrix ScaleMatrix(const Vector scale)
 {
 	Matrix matrix = CreateMatrix();
 
@@ -67,7 +68,7 @@ Matrix ScaleMatrix(Vector scale)
 	return matrix;
 }
 
-Matrix TransformMatrix(Vector translation, Vector rotation, Vector scale)
+Matrix TransformMatrix(const Vector translation, const Vector rotation, const Vector scale)
 {
 	Matrix translationMatrix = TranslateMatrix(translation);
 	Matrix rotXMatrix = RotateMatrix(rotation->x, CreateVector3(1, 0, 0));
@@ -88,7 +89,7 @@ Matrix TransformMatrix(Vector translation, Vector rotation, Vector scale)
 }
 
 
-Matrix MultiplyMatrix(Matrix left, Matrix right)
+Matrix MultiplyMatrix(const Matrix left, const Matrix right)
 {
 	Matrix matrix = CreateMatrix();
 
@@ -105,4 +106,16 @@ Matrix MultiplyMatrix(Matrix left, Matrix right)
 float* MatrixElement(Matrix matrix, unsigned int x, unsigned int y)
 {
 	return &matrix[x + y * 4];
+}
+
+
+void PrintMatrix(const Matrix matrix)
+{
+	for (unsigned int i = 0; i < 4; i++)
+	{
+		printf("%G", *MatrixElement(matrix, i, 0));
+		for (unsigned int j = 1; j < 4; j++)
+			printf(", %G", *MatrixElement(matrix, i, j));
+		printf("\n");
+	}
 }

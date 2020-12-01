@@ -6,7 +6,7 @@
 
 Mesh CreateMesh(const float* vertices, const float* indices, long vertexCount, long indiceCount)
 {
-	Mesh mesh = malloc(sizeof(Mesh));
+	Mesh mesh = malloc(sizeof(struct Mesh));
 	if (!mesh)
 		return NULL;
 
@@ -30,7 +30,7 @@ Mesh CreateMesh(const float* vertices, const float* indices, long vertexCount, l
 	return mesh;
 }
 
-void SetMesh(Mesh mesh, const float* vertices, const float* indices, long vertexCount, long indiceCount)
+void SetMesh(Mesh mesh, const float* vertices, const float* indices, long long vertexCount, long indiceCount)
 {
 	glGenVertexArrays(1, &mesh->vao);
 	glBindVertexArray(mesh->vao);

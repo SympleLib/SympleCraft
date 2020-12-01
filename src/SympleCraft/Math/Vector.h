@@ -4,8 +4,14 @@ typedef struct Vector
 {
 	union
 	{
-		float x, y, z, w;
-		float r, g, b, a;
+		struct
+		{
+			float x, y, z, w;
+		};
+		struct
+		{
+			float r, g, b, a;
+		};
 		float values[4];
 	};
 } *Vector;
@@ -16,3 +22,5 @@ Vector CreateVector2(float x, float y);
 Vector CreateVector1(float v);
 Vector CreateVector();
 void DeleteVector(const Vector vector);
+
+void PrintVector(const Vector vector);

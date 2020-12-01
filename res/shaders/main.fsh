@@ -1,8 +1,6 @@
 #version 330 core
 
-uniform vec4 uCol;
-
 void main()
 {
-	gl_FragColor = uCol;
+	gl_FragColor = vec4(0, 1, 0, 1);
 }

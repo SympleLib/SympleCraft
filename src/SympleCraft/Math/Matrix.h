@@ -7,12 +7,14 @@ typedef float *Matrix;
 Matrix CreateMatrix();
 void DeleteMatrix(const Matrix matrix);
 
-Matrix TranslateMatrix(Vector translation);
-Matrix RotateMatrix(float angle, Vector axis);
-Matrix ScaleMatrix(Vector scale);
+Matrix TranslateMatrix(const Vector translation);
+Matrix RotateMatrix(float angle, const Vector axis);
+Matrix ScaleMatrix(const Vector scale);
 
-Matrix TransformMatrix(Vector translation, Vector rotation, Vector scale);
+Matrix TransformMatrix(const Vector translation, const Vector rotation, const Vector scale);
 
-Matrix MultiplyMatrix(Matrix left, Matrix right);
+Matrix MultiplyMatrix(const Matrix left, const Matrix right);
 
 float* MatrixElement(Matrix matrix, unsigned int x, unsigned int y);
+
+void PrintMatrix(const Matrix matrix);
