@@ -4,10 +4,10 @@
 
 #include "SympleCraft/Math/Vector.h"
 #include "SympleCraft/Math/Matrix.h"
-#include "SympleCraft/Transform.h"
-#include "SympleCraft/Renderer.h"
-#include "SympleCraft/Shader.h"
-#include "SympleCraft/Mesh.h"
+#include "SympleCraft/World/Transform.h"
+#include "SympleCraft/Render/Renderer.h"
+#include "SympleCraft/Render/Shader.h"
+#include "SympleCraft/Render/Mesh.h"
 
 #define PI 3.1415926535
 
@@ -76,7 +76,7 @@ int main()
 	shader = CreateShader("res/shaders/main.vsh", "res/shaders/main.fsh");
 	BindShader(shader);
 
-	modelTransform = CreateTransformRef(CreateVector3(0, 0, 0), CreateVector3(0, 0, 0), CreateVector3(0, 0, 0));
+	modelTransform = CreateTransformRef(CreateVector3(0, 0, 0), CreateVector3(0, 0, 0), CreateVector3(1, 1, 1));
 	camTransform = CreateTransformRef(CreateVector3(0, 0, -10), CreateVector3(0, 0, 0), CreateVector3(0, 0, 0));
 
 	{

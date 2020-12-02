@@ -1,6 +1,6 @@
 #pragma once
 
-#include "SympleCraft/Mesh.h"
+#include "SympleCraft/Render/Mesh.h"
 
 extern void (*SetBackgroundColor)(float red, float green, float blue, float alpha);
 
