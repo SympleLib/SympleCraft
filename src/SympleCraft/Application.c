@@ -4,15 +4,25 @@
 
 #include "SympleCraft/Math/Vector.h"
 #include "SympleCraft/Math/Matrix.h"
+#include "SympleCraft/Transform.h"
 #include "SympleCraft/Renderer.h"
 #include "SympleCraft/Shader.h"
 #include "SympleCraft/Mesh.h"
 
 #define PI 3.1415926535
 
+Shader shader;
+Transform modelTransform;
+Transform camTransform;
+
 void WindowSizeCallback(GLFWwindow* win, int width, int height)
 {
 	glViewport(0, 0, width, height);
+
+	Matrix proj = PerspectiveMatrix((float)width / (float)height, 80, 0.1, 100);
+	//Matrix proj = OrthoMatrix(-5, 5, 5, -5, 0.1, 100);
+	SetShaderUniformMat(shader, "uProj", proj);
+	DeleteMatrix(proj);
 }
 
 int main()
@@ -51,10 +61,10 @@ int main()
 	fprintf(stdout, "[#]<GLEW version>: %s\n", glewGetString(GLEW_VERSION));
 
 	const float vertices[] = {
-		-0.5f, -0.5f,
-		-0.5f,  0.5f,
-		 0.5f,  0.5f,
-		 0.5f, -0.5f,
+		-1, -1,
+		-1,  1,
+		 1,  1,
+		 1, -1,
 	};
 
 	const unsigned int indices[] = {
@@ -63,28 +73,27 @@ int main()
 	};
 
 	Mesh mesh = CreateMesh(vertices, indices, 4, 6);
-	Shader shader = CreateShader("res/shaders/main.vsh", "res/shaders/main.fsh");
+	shader = CreateShader("res/shaders/main.vsh", "res/shaders/main.fsh");
 	BindShader(shader);
 
+	modelTransform = CreateTransformRef(CreateVector3(0, 0, 0), CreateVector3(0, 0, 0), CreateVector3(0, 0, 0));
+	camTransform = CreateTransformRef(CreateVector3(0, 0, -10), CreateVector3(0, 0, 0), CreateVector3(0, 0, 0));
+
 	{
-		Vector translation = CreateVector3(0, 0, 0), rotation = CreateVector3(0, 0, 0), scale = CreateVector3(1, 1, 1);
-		Matrix model = TransformMatrix(translation, rotation, scale);
-		DeleteVector(translation); DeleteVector(rotation); DeleteVector(scale);
+		Matrix model = TransformToMatrix(modelTransform);
 		SetShaderUniformMat(shader, "uModel", model);
 		DeleteMatrix(model);
 	}
 
 	{
-		Vector translation = CreateVector3(0, 0, 0), rotation = CreateVector3(0, 0, 0);
-		//Matrix view = ViewMatrix(translation, rotation);
-		Matrix view = CreateMatrix();
-		DeleteVector(translation); DeleteVector(rotation);
+		Matrix view = TransformViewMatrix(camTransform);
 		SetShaderUniformMat(shader, "uView", view);
 		DeleteMatrix(view);
 	}
 
 	{
-		Matrix proj = CreateMatrix();
+		Matrix proj = PerspectiveMatrix((float)16 / (float)9, 80, 0.1, 100);
+		//Matrix proj = OrthoMatrix(-5, 5, 5, -5, 0.1, 100);
 		SetShaderUniformMat(shader, "uProj", proj);
 		DeleteMatrix(proj);
 	}
@@ -99,6 +108,8 @@ int main()
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
+	DeleteTransform(modelTransform);
+	DeleteTransform(camTransform);
 	DeleteShader(shader);
 	DeleteMesh(mesh);
 	

@@ -33,6 +33,9 @@
     <ClCompile Include="src\SympleCraft\Math\Vector.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\SympleCraft\Transform.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\SympleCraft\Shader.h">
@@ -48,6 +51,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\SympleCraft\Math\Vector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SympleCraft\Transform.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,25 +1,15 @@
 #include "SympleCraft/Math/Vector.h"
 
+#include <memory.h>
 #include <malloc.h>
 #include <stdio.h>
 
-Vector CreateVector()
+Vector CreateVector4(float x, float y, float z, float w)
 {
 	Vector vector = malloc(sizeof(struct Vector));
 	if (!vector)
 		return NULL;
 
-	vector->values[0] = 0;
-	vector->values[1] = 0;
-	vector->values[2] = 0;
-	vector->values[3] = 0;
-
-	return vector;
-}
-
-Vector CreateVector4(float x, float y, float z, float w)
-{
-	Vector vector = CreateVector();
 	vector->x = x;
 	vector->y = y;
 	vector->z = z;
@@ -38,6 +28,31 @@ Vector CreateVector2(float x, float y)
 Vector CreateVector1(float v)
 {
 	return CreateVector4(v, v, v, v);
+}
+
+Vector CreateVector()
+{
+	Vector vector = malloc(sizeof(struct Vector));
+	if (!vector)
+		return NULL;
+
+	vector->values[0] = 0;
+	vector->values[1] = 0;
+	vector->values[2] = 0;
+	vector->values[3] = 0;
+
+	return vector;
+}
+
+Vector CreateVectorFromVector(const Vector other)
+{
+	Vector vector = malloc(sizeof(struct Vector));
+	if (!vector)
+		return NULL;
+
+	memcpy_s(vector, sizeof(vector), other, sizeof(other));
+
+	return vector;
 }
 
 void DeleteVector(const Vector vector)

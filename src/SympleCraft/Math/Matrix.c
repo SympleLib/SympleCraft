@@ -36,7 +36,7 @@ Matrix TranslateMatrix(const Vector translation)
 	return matrix;
 }
 
-Matrix RotateMatrix(float angle, const Vector axis)
+Matrix RotateAxisMatrix(float angle, const Vector axis)
 {
 	Matrix matrix = CreateMatrix();
 
@@ -57,6 +57,20 @@ Matrix RotateMatrix(float angle, const Vector axis)
 	return matrix;
 }
 
+Matrix RotateMatrix(const Vector rotation)
+{
+	Matrix rotXMatrix = RotateAxisMatrix(rotation->x, CreateVector3(1, 0, 0));
+	Matrix rotYMatrix = RotateAxisMatrix(rotation->y, CreateVector3(0, 1, 0));
+	Matrix rotZMatrix = RotateAxisMatrix(rotation->z, CreateVector3(0, 0, 1));
+
+	Matrix matrix = MultiplyMatrix(rotXMatrix, MultiplyMatrix(rotYMatrix, rotZMatrix));
+	DeleteMatrix(rotXMatrix);
+	DeleteMatrix(rotYMatrix);
+	DeleteMatrix(rotZMatrix);
+
+	return matrix;
+}
+
 Matrix ScaleMatrix(const Vector scale)
 {
 	Matrix matrix = CreateMatrix();
@@ -71,19 +85,58 @@ Matrix ScaleMatrix(const Vector scale)
 Matrix TransformMatrix(const Vector translation, const Vector rotation, const Vector scale)
 {
 	Matrix translationMatrix = TranslateMatrix(translation);
-	Matrix rotXMatrix = RotateMatrix(rotation->x, CreateVector3(1, 0, 0));
-	Matrix rotYMatrix = RotateMatrix(rotation->y, CreateVector3(0, 1, 0));
-	Matrix rotZMatrix = RotateMatrix(rotation->z, CreateVector3(0, 0, 1));
+	Matrix rotationMatrix = RotateMatrix(rotation);
 	Matrix scaleMatrix = ScaleMatrix(scale);
 
-	Matrix rotationMatrix = MultiplyMatrix(rotXMatrix, MultiplyMatrix(rotYMatrix, rotZMatrix));
 	Matrix matrix = MultiplyMatrix(translationMatrix, MultiplyMatrix(rotationMatrix, scaleMatrix));
 	DeleteMatrix(translationMatrix);
 	DeleteMatrix(rotationMatrix);
 	DeleteMatrix(scaleMatrix);
-	DeleteMatrix(rotXMatrix);
-	DeleteMatrix(rotYMatrix);
-	DeleteMatrix(rotZMatrix);
+
+	return matrix;
+}
+
+Matrix ViewMatrix(const Vector translation, const Vector rotation)
+{
+	Vector negative = CreateVector3(-translation->x, -translation->y, -translation->z);
+	Matrix translationMatrix = TranslateMatrix(translation, rotation);
+	DeleteVector(negative);
+	
+	Matrix rotationMatrix = RotateMatrix(rotation);
+	Matrix matrix = MultiplyMatrix(translationMatrix, rotationMatrix);
+
+	return matrix;
+}
+
+Matrix PerspectiveMatrix(float aspect, float fov, float near, float far)
+{
+	Matrix matrix = CreateMatrix();
+
+	float range = far - near;
+	float tan = tanf(fov / 2);
+
+	*MatrixElement(matrix, 0, 0) = 1 / (aspect * tan);
+	*MatrixElement(matrix, 1, 1) = 1 / tan;
+	*MatrixElement(matrix, 2, 2) = -((far + near) / range);
+	*MatrixElement(matrix, 2, 3) = -1;
+	*MatrixElement(matrix, 3, 2) = -((2 * far * near) / range);
+	*MatrixElement(matrix, 3, 3) = 0;
+
+	return matrix;
+}
+
+Matrix OrthoMatrix(float left, float top, float right, float bottom, float near, float far)
+{
+	Matrix matrix = CreateMatrix();
+
+	float range = far - near;
+
+	*MatrixElement(matrix, 0, 0) = 2 / (right - left);
+	*MatrixElement(matrix, 1, 1) = 2 / (top - bottom);
+	*MatrixElement(matrix, 2, 2) = -2 / range;
+	*MatrixElement(matrix, 3, 0) = -(right + left) / (right - left);
+	*MatrixElement(matrix, 3, 1) = -(top + bottom) / (top - bottom);
+	*MatrixElement(matrix, 3, 2) = -1;
 
 	return matrix;
 }
