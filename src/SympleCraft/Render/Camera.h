@@ -7,7 +7,7 @@ typedef enum CameraType
 {
 	CameraType_Perspective,
 	CameraType_Orthographic
-} const *CameraType;
+} CameraType;
 
 typedef struct Camera
 {
