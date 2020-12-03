@@ -1,12 +1,13 @@
 #pragma once
 
-#include "SympleCraft/Math/Matrix.h"
 #include "SympleCraft/Math/Vector.h"
 
 typedef struct Transform
 {
 	Vector Translation, Rotation, Scale;
 } *Transform;
+
+typedef float* Matrix;
 
 Transform CreateTransform();
 Transform CreateTransformFromTransform(const Transform other);
@@ -18,3 +19,7 @@ Matrix TransformViewMatrixRef(const Transform transform);
 Matrix TransformToMatrixRef(const Transform transform);
 Matrix TransformViewMatrix(const Transform transform);
 Matrix TransformToMatrix(const Transform transform);
+
+Vector FindForward(const Matrix matrix);
+Vector FindRight(const Matrix matrix);
+Vector FindUp(const Matrix matrix);

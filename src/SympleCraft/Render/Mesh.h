@@ -3,10 +3,10 @@
 typedef struct Mesh
 {
 	unsigned int vao, ibo;
-	int vCount;
+	int tCount;
 } *Mesh;
 
-Mesh CreateMesh(const float* vertices, const float* indices, long vertexCount, long indiceCount);
-void SetMesh(Mesh mesh, const float* vertices, const float* indices, long vertexCount, long indiceCount);
+Mesh CreateMesh(const float* vertices, const float* indices, long long vertexCount, long long triangleCount);
+void SetMesh(Mesh mesh, const float* vertices, const float* indices, long long vertexCount, long long triangleCount);
 void BindMesh(const Mesh mesh);
 void DeleteMesh(const Mesh mesh);

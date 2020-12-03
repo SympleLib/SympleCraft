@@ -1,6 +1,7 @@
 #pragma once
 
 #include "SympleCraft/Math/Vector.h"
+#include "SympleCraft/World/Transform.h"
 
 typedef float *Matrix;
 
@@ -10,6 +11,7 @@ void DeleteMatrix(const Matrix matrix);
 Matrix TranslateMatrix(const Vector translation);
 Matrix RotateAxisMatrix(float angle, const Vector axis);
 Matrix RotateMatrix(const Vector rotation);
+Matrix RotateMatrixView(const Vector rotation);
 Matrix ScaleMatrix(const Vector scale);
 
 Matrix TransformMatrix(const Vector translation, const Vector rotation, const Vector scale);

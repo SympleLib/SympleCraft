@@ -71,6 +71,20 @@ Matrix RotateMatrix(const Vector rotation)
 	return matrix;
 }
 
+Matrix RotateMatrixView(const Vector rotation)
+{
+	Matrix rotXMatrix = RotateAxisMatrix(rotation->x, CreateVector3(1, 0, 0));
+	Matrix rotYMatrix = RotateAxisMatrix(rotation->y, CreateVector3(0, 1, 0));
+	Matrix rotZMatrix = RotateAxisMatrix(rotation->z, CreateVector3(0, 0, 1));
+
+	Matrix matrix = MultiplyMatrix(rotYMatrix, MultiplyMatrix(rotZMatrix, rotXMatrix));
+	DeleteMatrix(rotXMatrix);
+	DeleteMatrix(rotYMatrix);
+	DeleteMatrix(rotZMatrix);
+
+	return matrix;
+}
+
 Matrix ScaleMatrix(const Vector scale)
 {
 	Matrix matrix = CreateMatrix();
@@ -102,7 +116,7 @@ Matrix ViewMatrix(const Vector translation, const Vector rotation)
 	Matrix translationMatrix = TranslateMatrix(translation, rotation);
 	DeleteVector(negative);
 	
-	Matrix rotationMatrix = RotateMatrix(rotation);
+	Matrix rotationMatrix = RotateMatrixView(rotation);
 	Matrix matrix = MultiplyMatrix(translationMatrix, rotationMatrix);
 
 	return matrix;

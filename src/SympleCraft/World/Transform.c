@@ -1,5 +1,7 @@
 #include "SympleCraft/World/Transform.h"
 
+#include "SympleCraft/Math/Matrix.h"
+
 #include <malloc.h>
 #include <memory.h>
 
@@ -83,4 +85,20 @@ Matrix TransformViewMatrixRef(const Transform transform)
 Matrix TransformViewMatrix(const Transform transform)
 {
 	return ViewMatrix(transform->Translation, transform->Rotation);
+}
+
+
+Vector FindForward(const Matrix matrix)
+{
+	return CreateVector3(-*MatrixElement(matrix, 2, 0), -*MatrixElement(matrix, 2, 1), -*MatrixElement(matrix, 2, 2));
+}
+
+Vector FindRight(const Matrix matrix)
+{
+	return CreateVector3(*MatrixElement(matrix, 0, 0), *MatrixElement(matrix, 0, 1), *MatrixElement(matrix, 0, 2));
+}
+
+Vector FindUp(const Matrix matrix)
+{
+	return CreateVector3(*MatrixElement(matrix, 1, 0), *MatrixElement(matrix, 1, 1), *MatrixElement(matrix, 1, 2));
 }

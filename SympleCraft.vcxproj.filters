@@ -18,42 +18,54 @@
     <ClCompile Include="src\SympleCraft\Application.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\SympleCraft\Shader.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\SympleCraft\Mesh.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\SympleCraft\Renderer.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\SympleCraft\Math\Matrix.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\SympleCraft\Math\Vector.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\SympleCraft\Transform.c">
+    <ClCompile Include="src\SympleCraft\World\Transform.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SympleCraft\Render\Mesh.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SympleCraft\Render\Renderer.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SympleCraft\Render\Shader.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SympleCraft\Render\Camera.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SympleCraft\Window.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\SympleCraft\Shader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\SympleCraft\Mesh.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\SympleCraft\Renderer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\SympleCraft\Math\Matrix.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\SympleCraft\Math\Vector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\SympleCraft\Transform.h">
+    <ClInclude Include="src\SympleCraft\World\Transform.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SympleCraft\Render\Mesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SympleCraft\Render\Renderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SympleCraft\Render\Shader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SympleCraft\Render\Camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SympleCraft\Window.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
