@@ -8,7 +8,9 @@
 #include "SympleCraft/Render/Camera.h"
 #include "SympleCraft/Render/Mesh.h"
 #include "SympleCraft/Render/Shader.h"
+#include "SympleCraft/Util/List.h"
 #include "SympleCraft/Window.h"
+#include "SympleCraft/World/Chunk.h"
 #include "SympleCraft/World/Transform.h"
 
 #define PI 3.1415926535
@@ -41,39 +43,8 @@ int main()
 	}
 	fprintf(stdout, "[#]<GLEW version>: %s\n", glewGetString(GLEW_VERSION));
 
-	const float vertices[24] = {
-		-1, -1,  1,
-		-1,  1,  1,
-		 1,  1,  1,
-		 1, -1,  1,
-
-		-1, -1, -1,
-		-1,  1, -1,
-		 1,  1, -1,
-		 1, -1, -1,
-	};
-
-	const unsigned int indices[36] = {
-		0, 1, 2,
-		0, 2, 3,
-
-		0, 4, 5,
-		0, 5, 1,
-
-		0, 7, 4,
-		0, 3, 7,
-
-		2, 6, 7,
-		2, 7, 3,
-
-		2, 5, 6,
-		2, 1, 5,
-
-		6, 5, 4,
-		6, 4, 7,
-	};
-
-	Mesh mesh = CreateMesh(vertices, indices, 8, 12);
+	Chunk chunk = CreateChunk(0, 0);
+	GenerateChunkMesh(chunk);
 	shader = CreateShader("res/shaders/main.vsh", "res/shaders/main.fsh");
 	BindShader(shader);
 
@@ -90,103 +61,110 @@ int main()
 	SetBackgroundColor(0.25f, 0.25f, 0.25f, 1.0f);
 	while (!MainWindowShouldClose())
 	{
-		if (GetKeys()[GLFW_KEY_LEFT] == GLFW_PRESS || GetKeys()[GLFW_KEY_LEFT] == GLFW_REPEAT)
+		// Input
 		{
-			camera->Transform->Rotation->y += PI / 40;
-			if (camera->Transform->Rotation->y > PI * 2)
-				camera->Transform->Rotation->y = -PI * 2;
-		}
-		if (GetKeys()[GLFW_KEY_RIGHT] == GLFW_PRESS || GetKeys()[GLFW_KEY_RIGHT] == GLFW_REPEAT)
-		{
-			camera->Transform->Rotation->y -= PI / 40;
-			if (camera->Transform->Rotation->y < -PI * 2)
-				camera->Transform->Rotation->y = PI * 2;
-		}
-		if (GetKeys()[GLFW_KEY_UP] == GLFW_PRESS || GetKeys()[GLFW_KEY_UP] == GLFW_REPEAT)
-		{
-			camera->Transform->Rotation->x -= PI / 40;
-			if (camera->Transform->Rotation->x < -PI)
-				camera->Transform->Rotation->x = -PI;
-		}
-		if (GetKeys()[GLFW_KEY_DOWN] == GLFW_PRESS || GetKeys()[GLFW_KEY_DOWN] == GLFW_REPEAT)
-		{
-			camera->Transform->Rotation->x += PI / 40;
-			if (camera->Transform->Rotation->x > PI)
-				camera->Transform->Rotation->x = PI;
-		}
+			if (GetKeys()[GLFW_KEY_LEFT] == GLFW_PRESS || GetKeys()[GLFW_KEY_LEFT] == GLFW_REPEAT)
+			{
+				camera->Transform->Rotation->y += PI / 40;
+				if (camera->Transform->Rotation->y > PI * 2)
+					camera->Transform->Rotation->y = -PI * 2;
+			}
+			if (GetKeys()[GLFW_KEY_RIGHT] == GLFW_PRESS || GetKeys()[GLFW_KEY_RIGHT] == GLFW_REPEAT)
+			{
+				camera->Transform->Rotation->y -= PI / 40;
+				if (camera->Transform->Rotation->y < -PI * 2)
+					camera->Transform->Rotation->y = PI * 2;
+			}
+			if (GetKeys()[GLFW_KEY_UP] == GLFW_PRESS || GetKeys()[GLFW_KEY_UP] == GLFW_REPEAT)
+			{
+				camera->Transform->Rotation->x -= PI / 40;
+				if (camera->Transform->Rotation->x < -PI)
+					camera->Transform->Rotation->x = -PI;
+			}
+			if (GetKeys()[GLFW_KEY_DOWN] == GLFW_PRESS || GetKeys()[GLFW_KEY_DOWN] == GLFW_REPEAT)
+			{
+				camera->Transform->Rotation->x += PI / 40;
+				if (camera->Transform->Rotation->x > PI)
+					camera->Transform->Rotation->x = PI;
+			}
 
-		if (GetKeys()[GLFW_KEY_SPACE] == GLFW_PRESS || GetKeys()[GLFW_KEY_SPACE] == GLFW_REPEAT)
-		{
-			camera->Transform->Translation->y -= 0.3;
-		}
-		if (GetKeys()[GLFW_KEY_LEFT_SHIFT] == GLFW_PRESS || GetKeys()[GLFW_KEY_LEFT_SHIFT] == GLFW_REPEAT)
-		{
-			camera->Transform->Translation->y += 0.3;
-		}
-		if (GetKeys()[GLFW_KEY_W] == GLFW_PRESS || GetKeys()[GLFW_KEY_W] == GLFW_REPEAT)
-		{
-			Matrix view = CameraView(camera);
-			Vector forward = FindForward(view);
-			camera->Transform->Translation->x -= forward->x * 0.3;
-			camera->Transform->Translation->z -= forward->z * 0.3;
-			DeleteVector(forward);
-			DeleteMatrix(view);
-		}
-		if (GetKeys()[GLFW_KEY_S] == GLFW_PRESS || GetKeys()[GLFW_KEY_S] == GLFW_REPEAT)
-		{
-			Matrix view = CameraView(camera);
-			Vector forward = FindForward(view);
-			camera->Transform->Translation->x += forward->x * 0.3;
-			camera->Transform->Translation->z += forward->z * 0.3;
-			DeleteVector(forward);
-			DeleteMatrix(view);
-		}
+			if (GetKeys()[GLFW_KEY_SPACE] == GLFW_PRESS || GetKeys()[GLFW_KEY_SPACE] == GLFW_REPEAT)
+			{
+				camera->Transform->Translation->y -= 0.3;
+			}
+			if (GetKeys()[GLFW_KEY_LEFT_SHIFT] == GLFW_PRESS || GetKeys()[GLFW_KEY_LEFT_SHIFT] == GLFW_REPEAT)
+			{
+				camera->Transform->Translation->y += 0.3;
+			}
+			if (GetKeys()[GLFW_KEY_W] == GLFW_PRESS || GetKeys()[GLFW_KEY_W] == GLFW_REPEAT)
+			{
+				Matrix view = CameraView(camera);
+				Vector forward = FindForward(view);
+				camera->Transform->Translation->x -= forward->x * 0.3;
+				camera->Transform->Translation->z -= forward->z * 0.3;
+				DeleteVector(forward);
+				DeleteMatrix(view);
+			}
+			if (GetKeys()[GLFW_KEY_S] == GLFW_PRESS || GetKeys()[GLFW_KEY_S] == GLFW_REPEAT)
+			{
+				Matrix view = CameraView(camera);
+				Vector forward = FindForward(view);
+				camera->Transform->Translation->x += forward->x * 0.3;
+				camera->Transform->Translation->z += forward->z * 0.3;
+				DeleteVector(forward);
+				DeleteMatrix(view);
+			}
 
-		if (GetKeys()[GLFW_KEY_A] == GLFW_PRESS || GetKeys()[GLFW_KEY_A] == GLFW_REPEAT)
-		{
-			Matrix view = CameraView(camera);
-			Vector right = FindRight(view);
-			camera->Transform->Translation->x -= right->x * 0.3;
-			camera->Transform->Translation->z -= right->z * 0.3;
-			DeleteVector(right);
-			DeleteMatrix(view);
-		}
-		if (GetKeys()[GLFW_KEY_D] == GLFW_PRESS || GetKeys()[GLFW_KEY_D] == GLFW_REPEAT)
-		{
-			Matrix view = CameraView(camera);
-			Vector right = FindRight(view);
-			camera->Transform->Translation->x += right->x * 0.3;
-			camera->Transform->Translation->z += right->z * 0.3;
-			DeleteVector(right);
-			DeleteMatrix(view);
+			if (GetKeys()[GLFW_KEY_A] == GLFW_PRESS || GetKeys()[GLFW_KEY_A] == GLFW_REPEAT)
+			{
+				Matrix view = CameraView(camera);
+				Vector right = FindRight(view);
+				camera->Transform->Translation->x -= right->x * 0.3;
+				camera->Transform->Translation->z -= right->z * 0.3;
+				DeleteVector(right);
+				DeleteMatrix(view);
+			}
+			if (GetKeys()[GLFW_KEY_D] == GLFW_PRESS || GetKeys()[GLFW_KEY_D] == GLFW_REPEAT)
+			{
+				Matrix view = CameraView(camera);
+				Vector right = FindRight(view);
+				camera->Transform->Translation->x += right->x * 0.3;
+				camera->Transform->Translation->z += right->z * 0.3;
+				DeleteVector(right);
+				DeleteMatrix(view);
+			}
 		}
 		Clear();
 
+		// Projection
 		{
-			Matrix model = TransformToMatrix(modelTransform);
-			SetShaderUniformMat(shader, "uModel", model);
-			DeleteMatrix(model);
+			{
+				Matrix model = TransformToMatrix(modelTransform);
+				SetShaderUniformMat(shader, "uModel", model);
+				DeleteMatrix(model);
+			}
+
+			{
+				Matrix view = CameraView(camera);
+				SetShaderUniformMat(shader, "uView", view);
+				DeleteMatrix(view);
+			}
+
+			{
+				Matrix proj = CameraProj(camera);
+				SetShaderUniformMat(shader, "uProj", proj);
+				DeleteMatrix(proj);
+			}
 		}
 
-		{
-			Matrix view = CameraView(camera);
-			SetShaderUniformMat(shader, "uView", view);
-			DeleteMatrix(view);
-		}
-		
-		{
-			Matrix proj = CameraProj(camera);
-			SetShaderUniformMat(shader, "uProj", proj);
-			DeleteMatrix(proj);
-		}
-		Render(mesh, shader);
+		Render(chunk->Mesh, shader);
 
 		UpdateMainWindow();
 	}
 	DeleteTransform(modelTransform);
 	DeleteCamera(camera);
 	DeleteShader(shader);
-	DeleteMesh(mesh);
+	DeleteChunk(chunk);
 
 	DestroyMainWindow();
 	

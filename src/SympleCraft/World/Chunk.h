@@ -4,7 +4,7 @@
 #include "SympleCraft/World/Block.h"
 
 #define CHUNK_SIZE_X 4
-#define CHUNK_SIZE_Y 16
+#define CHUNK_SIZE_Y 4
 #define CHUNK_SIZE_Z 4
 
 typedef struct Chunk

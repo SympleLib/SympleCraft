@@ -4,6 +4,10 @@
 #include <malloc.h>
 #include <stdio.h>
 
+const Vector* const ForwardVector = &(struct Vector) { 0, 0, 1, 1 };
+const Vector* const RightVector = &(struct Vector) { 1, 0, 0, 1 };
+const Vector* const UpVector = &(struct Vector) { 0, 1, 0, 1 };
+
 Vector CreateVector4(float x, float y, float z, float w)
 {
 	Vector vector = malloc(sizeof(struct Vector));
@@ -58,6 +62,26 @@ Vector CreateVectorFromVector(const Vector other)
 void DeleteVector(const Vector vector)
 {
 	free(vector);
+}
+
+Vector AddVector(const Vector left, const Vector right)
+{
+	return CreateVector4(left->x + right->x, left->y + right->y, left->z + right->z, left->w + right->w);
+}
+
+Vector SubVector(const Vector left, const Vector right)
+{
+	return CreateVector4(left->x - right->x, left->y - right->y, left->z - right->z, left->w - right->w);
+}
+
+Vector MulVector(const Vector vector, float val)
+{
+	return CreateVector4(vector->x * val, vector->y * val, vector->z * val, vector->w * val);
+}
+
+Vector DivVector(const Vector vector, float val)
+{
+	return CreateVector4(vector->x / val, vector->y / val, vector->z / val, vector->w / val);
 }
 
 void PrintVector(const Vector vector)
