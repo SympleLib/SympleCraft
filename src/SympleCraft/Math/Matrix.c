@@ -1,7 +1,6 @@
+#include <pch.h>
 #include "SympleCraft/Math/Matrix.h"
 
-#include <malloc.h>
-#include <stdio.h>
 #include <math.h>
 
 Matrix CreateMatrix()

@@ -1,6 +1,5 @@
+#include <pch.h>
 #include "SympleCraft/Render/Camera.h"
-
-#include <malloc.h>
 
 #include "SympleCraft/Window.h"
 

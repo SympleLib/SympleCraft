@@ -1,12 +1,19 @@
+#include <pch.h>
 #include "SympleCraft/Math/Vector.h"
 
-#include <memory.h>
-#include <malloc.h>
 #include <stdio.h>
 
-const Vector* const ForwardVector = &(struct Vector) { 0, 0, 1, 1 };
-const Vector* const RightVector = &(struct Vector) { 1, 0, 0, 1 };
-const Vector* const UpVector = &(struct Vector) { 0, 1, 0, 1 };
+const Vector const ZeroVector = &(struct Vector) { 0, 0, 0, 0 };
+const Vector const OneVector = &(struct Vector) { 1, 1, 1, 1 };
+const Vector const XOneVector = &(struct Vector) { -1, -1, -1, -1 };
+
+const Vector const ForwardVector = &(struct Vector) { 0, 0, 1, 1 };
+const Vector const RightVector = &(struct Vector) { 1, 0, 0, 1 };
+const Vector const UpVector = &(struct Vector) { 0, 1, 0, 1 };
+
+const Vector const BackwardVector = &(struct Vector) { 0, 0, -1, 1 };
+const Vector const LeftVector = &(struct Vector) { -1, 0, 0, 1 };
+const Vector const DownVector = &(struct Vector) { 0, -1, 0, 1 };
 
 Vector CreateVector4(float x, float y, float z, float w)
 {

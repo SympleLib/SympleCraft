@@ -1,9 +1,5 @@
+#include <pch.h>
 #include "SympleCraft/Util/List.h"
-
-#include <malloc.h>
-#include <memory.h>
-#include <assert.h>
-#include <stdio.h>
 
 List CreateList(long long elementSize)
 {

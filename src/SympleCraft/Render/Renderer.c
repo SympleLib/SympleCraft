@@ -1,8 +1,9 @@
+#include <pch.h>
 #include "SympleCraft/Render/Renderer.h"
 
 #include <gl/glew.h>
 
-static Vector faceCol, lineCol;
+static Vector faceCol, lineCol, dotCol;
 
 void (*SetBackgroundColor)(float red, float green, float blue, float alpha) = glClearColor;
 
@@ -17,13 +18,19 @@ void Render(const Mesh mesh, const Shader shader)
 		faceCol = CreateVector3(1, 1, 1);
 	if (!lineCol)
 		lineCol = CreateVector3(0, 1, 0);
+	if (!dotCol)
+		dotCol = CreateVector3(1, 0, 0);
+
+	glEnableVertexAttribArray(0);
+	BindMesh(mesh);
 
 	SetShaderUniformVec(shader, "uCol", faceCol);
-
-	BindMesh(mesh);
 	glDrawElements(GL_TRIANGLES, mesh->tCount * 3, GL_UNSIGNED_INT, 0);
 
 	SetShaderUniformVec(shader, "uCol", lineCol);
+	glDrawElements(GL_LINES, mesh->tCount * 3, GL_UNSIGNED_INT, 0);
 
-	glDrawElements(GL_LINE_STRIP, mesh->tCount * 3, GL_UNSIGNED_INT, 0);
+	//SetShaderUniformVec(shader, "uCol", dotCol);
+	//glDrawElements(GL_POINTS, mesh->tCount * 3, GL_UNSIGNED_INT, 0);
+	glDisableVertexAttribArray(0);
 }

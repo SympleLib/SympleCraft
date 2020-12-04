@@ -1,7 +1,6 @@
+#include <pch.h>
 #include "SympleCraft/Render/Mesh.h"
 
-#include <malloc.h>
-#include <stdio.h>
 #include <gl/glew.h>
 
 Mesh CreateMesh(const float* vertices, const float* indices, long long vertexCount, long long triangleCount)
@@ -15,12 +14,11 @@ Mesh CreateMesh(const float* vertices, const float* indices, long long vertexCou
 	glGenVertexArrays(1, &mesh->vao);
 	glBindVertexArray(mesh->vao);
 
-	GLuint vbo;
+	GLuint vbo = 0;
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBufferData(GL_ARRAY_BUFFER, vertexCount * 3 * sizeof(float), vertices, GL_STATIC_DRAW);
 
-	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
 
 	glGenBuffers(1, &mesh->ibo);
@@ -37,13 +35,13 @@ void SetMesh(Mesh mesh, const float* vertices, const float* indices, long long v
 	glGenVertexArrays(1, &mesh->vao);
 	glBindVertexArray(mesh->vao);
 
-	GLuint vbo;
+	GLuint vbo = 0;
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBufferData(GL_ARRAY_BUFFER, vertexCount * 3 * sizeof(float), vertices, GL_STATIC_DRAW);
+	assert(vbo);
 
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
 	glGenBuffers(1, &mesh->ibo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->ibo);

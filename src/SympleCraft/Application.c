@@ -1,4 +1,5 @@
-#include <stdio.h>
+#include <pch.h>
+
 #include <gl/glew.h>
 #include <glfw/glfw3.h>
 
@@ -13,7 +14,7 @@
 #include "SympleCraft/World/Chunk.h"
 #include "SympleCraft/World/Transform.h"
 
-#define PI 3.1415926535
+#define PI 3.141592653596
 
 Shader shader;
 Transform modelTransform;
@@ -29,6 +30,10 @@ int main()
 		return -1;
 	}
 
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
 	InitMainWindow();
 	SetMainWindowCallbacks();
 
@@ -42,14 +47,18 @@ int main()
 		return -3;
 	}
 	fprintf(stdout, "[#]<GLEW version>: %s\n", glewGetString(GLEW_VERSION));
+	fprintf(stdout, "[#]<OpenGL version>: %s\n", glGetString(GL_VERSION));
 
 	Chunk chunk = CreateChunk(0, 0);
+	GenerateChunk(chunk);
 	GenerateChunkMesh(chunk);
 	shader = CreateShader("res/shaders/main.vsh", "res/shaders/main.fsh");
 	BindShader(shader);
 
 	modelTransform = CreateTransformRef(CreateVector3(0, 0, 0), CreateVector3(0, 0, 0), CreateVector3(1, 1, 1));
 	camera = CreatePerspectiveRef(CreateTransformRef(CreateVector3(0, 0, -10), CreateVector3(0, 0, PI), CreateVector3(0, 0, 0)), 80, 0.01, 100);
+
+	glPointSize(10);
 
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);

@@ -2,10 +2,12 @@
 
 typedef enum BlockType
 {
-	GrassBlock
+	BlockType_Air,
+	BlockType_Grass,
 } BlockType;
 
 typedef struct Block
 {
-	BlockType type;
+	BlockType Type;
+	int IsTransparent;
 } *Block;

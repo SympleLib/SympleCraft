@@ -7,6 +7,8 @@
 #define CHUNK_SIZE_Y 16
 #define CHUNK_SIZE_Z 16
 
+#define CHUNK_SIZE_XZ CHUNK_SIZE_X * CHUNK_SIZE_Z
+
 typedef struct Chunk
 {
 	int X, Y;
@@ -17,4 +19,5 @@ typedef struct Chunk
 Chunk CreateChunk(int x, int y);
 void DeleteChunk(const Chunk chunk);
 
+void GenerateChunk(const Chunk chunk);
 void GenerateChunkMesh(const Chunk chunk);

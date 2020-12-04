@@ -1,9 +1,7 @@
+#include <pch.h>
 #include "SympleCraft/World/Transform.h"
 
 #include "SympleCraft/Math/Matrix.h"
-
-#include <malloc.h>
-#include <memory.h>
 
 Transform CreateTransform()
 {

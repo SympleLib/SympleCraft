@@ -17,6 +17,9 @@ project "SympleCraft"
 	targetdir ("%{wks.location}/bin/" .. outputdir)
 	objdir ("%{wks.location}/bin-int/" .. outputdir)
 	
+	pchheader "pch.h"
+	pchsource "src/pch.c"
+	
 	files {
 		"src/**.h",
 		"src/**.c",

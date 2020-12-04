@@ -16,9 +16,17 @@ typedef struct Vector
 	};
 } *Vector;
 
-extern const Vector* const ForwardVector;
-extern const Vector* const RightVector;
-extern const Vector* const UpVector;
+extern const Vector const ZeroVector;
+extern const Vector const OneVector;
+extern const Vector const XOneVector;
+
+extern const Vector const ForwardVector;
+extern const Vector const RightVector;
+extern const Vector const UpVector;
+
+extern const Vector const BackwardVector;
+extern const Vector const LeftVector;
+extern const Vector const DownVector;
 
 Vector CreateVector4(float x, float y, float z, float w);
 Vector CreateVector3(float x, float y, float z);

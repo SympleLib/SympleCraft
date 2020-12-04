@@ -1,9 +1,6 @@
+#include <pch.h>
 #include "SympleCraft/Render/Shader.h"
 
-#include <stdio.h>
-#include <malloc.h>
-#include <string.h>
-#include <vcruntime.h>
 #include <gl/glew.h>
 
 Shader CreateShader(const char* vertFile, const char* fragFile)
