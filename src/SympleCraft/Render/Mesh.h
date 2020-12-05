@@ -2,7 +2,7 @@
 
 typedef struct Mesh
 {
-	unsigned int vao, ibo;
+	unsigned int vao, vbo, ibo;
 	int tCount;
 } *Mesh;
 

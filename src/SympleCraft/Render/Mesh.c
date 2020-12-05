@@ -5,6 +5,8 @@
 
 static GLuint StoreBuffer(const float* buffer, size_t count, int index, int size)
 {
+	printf("Buffer: %p %zd, at %i, %d\n", buffer, count, index, size);
+
 	GLuint bufferID = 0;
 	glGenBuffers(1, &bufferID);
 	glBindBuffer(GL_ARRAY_BUFFER, bufferID);
@@ -17,15 +19,17 @@ static GLuint StoreBuffer(const float* buffer, size_t count, int index, int size
 Mesh CreateMesh(const float* vertices, const float* indices, long long vertexCount, long long triangleCount)
 {
 	Mesh mesh = malloc(sizeof(struct Mesh));
-	if (!mesh)
-		return NULL;
+	assert(mesh);
 
 	mesh->tCount = triangleCount;
+
+	if (!(vertices && indices))
+		return mesh;
 
 	glGenVertexArrays(1, &mesh->vao);
 	glBindVertexArray(mesh->vao);
 
-	GLuint vbo = StoreBuffer(vertices, vertexCount * 3, 0, 3);
+	mesh->vbo = StoreBuffer(vertices, vertexCount * 3, 0, 3);
 
 	glGenBuffers(1, &mesh->ibo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->ibo);
@@ -36,12 +40,23 @@ Mesh CreateMesh(const float* vertices, const float* indices, long long vertexCou
 
 void SetMesh(Mesh mesh, const float* vertices, const float* indices, long long vertexCount, long long triangleCount)
 {
+	if (mesh->vao)
+	{
+		glDeleteVertexArrays(1, &mesh->vao);
+
+		glDeleteBuffers(1, &mesh->vbo);
+		glDeleteBuffers(1, &mesh->ibo);
+	}
+
 	mesh->tCount = triangleCount;
+
+	if (!(vertices && indices))
+		return;
 
 	glGenVertexArrays(1, &mesh->vao);
 	glBindVertexArray(mesh->vao);
 
-	GLuint vbo = StoreBuffer(vertices, vertexCount * 3, 0, 3);
+	mesh->vbo = StoreBuffer(vertices, vertexCount * 3, 0, 3);
 
 	glGenBuffers(1, &mesh->ibo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->ibo);

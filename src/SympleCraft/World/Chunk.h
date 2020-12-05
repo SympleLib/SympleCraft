@@ -2,6 +2,7 @@
 
 #include "SympleCraft/Render/Mesh.h"
 #include "SympleCraft/World/Block.h"
+#include "SympleCraft/World/Transform.h"
 
 #define CHUNK_SIZE_X 16
 #define CHUNK_SIZE_Y 16
@@ -14,7 +15,10 @@ typedef struct Chunk
 	int X, Y;
 	Block*** Blocks;
 	Mesh Mesh;
+	Transform Transform;
 } *Chunk;
+
+void GenerateChunkMap(int width, int height);
 
 Chunk CreateChunk(int x, int y);
 void DeleteChunk(const Chunk chunk);

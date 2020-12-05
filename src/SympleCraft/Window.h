@@ -17,3 +17,9 @@ void GetMainWindowSize(int* width, int* height);
 void SetMainWindowTitle(const char* title);
 
 const int* GetKeys();
+double GetMouseX();
+double GetMouseY();
+double GetPMouseX();
+double GetPMouseY();
+double GetDeltaMouseX();
+double GetDeltaMouseY();

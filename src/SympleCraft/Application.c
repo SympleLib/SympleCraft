@@ -49,9 +49,24 @@ int main()
 	fprintf(stdout, "[#]<GLEW version>: %s\n", glewGetString(GLEW_VERSION));
 	fprintf(stdout, "[#]<OpenGL version>: %s\n", glGetString(GL_VERSION));
 
-	Chunk chunk = CreateChunk(0, 0);
-	GenerateChunk(chunk);
-	GenerateChunkMesh(chunk);
+	GenerateChunkMap(2, 2);
+
+	Chunk chunk00 = CreateChunk(0, 0);
+	GenerateChunk(chunk00);
+	GenerateChunkMesh(chunk00);
+
+	Chunk chunk10 = CreateChunk(1, 0);
+	GenerateChunk(chunk10);
+	GenerateChunkMesh(chunk10);
+
+	Chunk chunk11 = CreateChunk(1, 1);
+	GenerateChunk(chunk11);
+	GenerateChunkMesh(chunk11);
+
+	Chunk chunk01 = CreateChunk(0, 1);
+	GenerateChunk(chunk01);
+	GenerateChunkMesh(chunk01);
+
 	shader = CreateShader("res/shaders/main.vsh", "res/shaders/main.fsh");
 	BindShader(shader);
 
@@ -72,30 +87,17 @@ int main()
 	{
 		// Input
 		{
-			if (GetKeys()[GLFW_KEY_LEFT] == GLFW_PRESS || GetKeys()[GLFW_KEY_LEFT] == GLFW_REPEAT)
-			{
-				camera->Transform->Rotation->y += PI / 40;
-				if (camera->Transform->Rotation->y > PI * 2)
-					camera->Transform->Rotation->y = -PI * 2;
-			}
-			if (GetKeys()[GLFW_KEY_RIGHT] == GLFW_PRESS || GetKeys()[GLFW_KEY_RIGHT] == GLFW_REPEAT)
-			{
-				camera->Transform->Rotation->y -= PI / 40;
-				if (camera->Transform->Rotation->y < -PI * 2)
-					camera->Transform->Rotation->y = PI * 2;
-			}
-			if (GetKeys()[GLFW_KEY_UP] == GLFW_PRESS || GetKeys()[GLFW_KEY_UP] == GLFW_REPEAT)
-			{
-				camera->Transform->Rotation->x -= PI / 40;
-				if (camera->Transform->Rotation->x < -PI)
-					camera->Transform->Rotation->x = -PI;
-			}
-			if (GetKeys()[GLFW_KEY_DOWN] == GLFW_PRESS || GetKeys()[GLFW_KEY_DOWN] == GLFW_REPEAT)
-			{
-				camera->Transform->Rotation->x += PI / 40;
-				if (camera->Transform->Rotation->x > PI)
-					camera->Transform->Rotation->x = PI;
-			}
+			camera->Transform->Rotation->y -= GetDeltaMouseX() * PI / 180 * 0.7;
+			if (camera->Transform->Rotation->y > PI * 2)
+				camera->Transform->Rotation->y = -camera->Transform->Rotation->y;
+			if (camera->Transform->Rotation->y < -PI * 2)
+				camera->Transform->Rotation->y = -camera->Transform->Rotation->y;
+
+			camera->Transform->Rotation->x += GetDeltaMouseY() * PI / 180 * 0.7;
+			if (camera->Transform->Rotation->x < -PI / 2 + PI / 180)
+				camera->Transform->Rotation->x = -PI / 2 + PI / 180;
+			if (camera->Transform->Rotation->x > PI / 2 - PI / 180)
+				camera->Transform->Rotation->x = PI / 2 - PI / 180;
 
 			if (GetKeys()[GLFW_KEY_SPACE] == GLFW_PRESS || GetKeys()[GLFW_KEY_SPACE] == GLFW_REPEAT)
 			{
@@ -108,24 +110,18 @@ int main()
 			if (GetKeys()[GLFW_KEY_W] == GLFW_PRESS || GetKeys()[GLFW_KEY_W] == GLFW_REPEAT)
 			{
 				Matrix view = CameraView(camera);
-				Vector forward = FindForward(view);
-				forward->y = 0;
-				forward->w = 0;
-				NormalizeVector(forward);
-				camera->Transform->Translation->x -= forward->x * 0.3;
-				camera->Transform->Translation->z -= forward->z * 0.3;
+				Vector forward = CreateVector3(sinf(camera->Transform->Rotation->y), 0, cosf(camera->Transform->Rotation->y));
+				camera->Transform->Translation->x += forward->x * 0.3;
+				camera->Transform->Translation->z += forward->z * 0.3;
 				DeleteVector(forward);
 				DeleteMatrix(view);
 			}
 			if (GetKeys()[GLFW_KEY_S] == GLFW_PRESS || GetKeys()[GLFW_KEY_S] == GLFW_REPEAT)
 			{
 				Matrix view = CameraView(camera);
-				Vector forward = FindForward(view);
-				forward->y = 0;
-				forward->w = 0;
-				NormalizeVector(forward);
-				camera->Transform->Translation->x += forward->x * 0.3;
-				camera->Transform->Translation->z += forward->z * 0.3;
+				Vector forward = CreateVector3(sinf(camera->Transform->Rotation->y), 0, cosf(camera->Transform->Rotation->y));
+				camera->Transform->Translation->x -= forward->x * 0.3;
+				camera->Transform->Translation->z -= forward->z * 0.3;
 				DeleteVector(forward);
 				DeleteMatrix(view);
 			}
@@ -133,10 +129,7 @@ int main()
 			if (GetKeys()[GLFW_KEY_A] == GLFW_PRESS || GetKeys()[GLFW_KEY_A] == GLFW_REPEAT)
 			{
 				Matrix view = CameraView(camera);
-				Vector right = FindRight(view);
-				right->y = 0;
-				right->w = 0;
-				NormalizeVector(right);
+				Vector right = CreateVector3(sinf(camera->Transform->Rotation->y - PI / 2), 0, cosf(camera->Transform->Rotation->y - PI / 2));
 				camera->Transform->Translation->x -= right->x * 0.3;
 				camera->Transform->Translation->z -= right->z * 0.3;
 				DeleteVector(right);
@@ -145,10 +138,7 @@ int main()
 			if (GetKeys()[GLFW_KEY_D] == GLFW_PRESS || GetKeys()[GLFW_KEY_D] == GLFW_REPEAT)
 			{
 				Matrix view = CameraView(camera);
-				Vector right = FindRight(view);
-				right->y = 0;
-				right->w = 0;
-				NormalizeVector(right);
+				Vector right = CreateVector3(sinf(camera->Transform->Rotation->y - PI / 2), 0, cosf(camera->Transform->Rotation->y - PI / 2));
 				camera->Transform->Translation->x += right->x * 0.3;
 				camera->Transform->Translation->z += right->z * 0.3;
 				DeleteVector(right);
@@ -159,12 +149,6 @@ int main()
 
 		// Projection
 		{
-			{
-				Matrix model = TransformToMatrix(modelTransform);
-				SetShaderUniformMat(shader, "uModel", model);
-				DeleteMatrix(model);
-			}
-
 			{
 				Matrix view = CameraView(camera);
 				SetShaderUniformMat(shader, "uView", view);
@@ -178,14 +162,43 @@ int main()
 			}
 		}
 
-		Render(chunk->Mesh, shader);
+		{
+			Matrix model = TransformToMatrix(chunk00->Transform);
+			SetShaderUniformMat(shader, "uModel", model);
+			DeleteMatrix(model);
+		}
+		Render(chunk00->Mesh, shader);
+
+		{
+			Matrix model = TransformToMatrix(chunk10->Transform);
+			SetShaderUniformMat(shader, "uModel", model);
+			DeleteMatrix(model);
+		}
+		Render(chunk10->Mesh, shader);
+
+		{
+			Matrix model = TransformToMatrix(chunk11->Transform);
+			SetShaderUniformMat(shader, "uModel", model);
+			DeleteMatrix(model);
+		}
+		Render(chunk11->Mesh, shader);
+
+		{
+			Matrix model = TransformToMatrix(chunk01->Transform);
+			SetShaderUniformMat(shader, "uModel", model);
+			DeleteMatrix(model);
+		}
+		Render(chunk01->Mesh, shader);
 
 		UpdateMainWindow();
 	}
 	DeleteTransform(modelTransform);
 	DeleteCamera(camera);
 	DeleteShader(shader);
-	DeleteChunk(chunk);
+	DeleteChunk(chunk00);
+	DeleteChunk(chunk10);
+	DeleteChunk(chunk11);
+	DeleteChunk(chunk01);
 
 	DestroyMainWindow();
 	

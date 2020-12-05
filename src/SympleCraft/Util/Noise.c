@@ -3,7 +3,7 @@
 
 /* ----- Perlin Noise By JavidX9 ----- */
 
-float GetNoise(int width, int height, float* seed, int octives, float bias, float* out)
+float GetNoise(int width, int height, float** seed, int offX, int offY, int octives, float bias, float** out)
 {
 	for (int y = 0; y < height; y++)
 		for (int x = 0; x < width; x++)
@@ -24,14 +24,14 @@ float GetNoise(int width, int height, float* seed, int octives, float bias, floa
 				float blendX = (float)(x - sampleX1) / (float)pitch;
 				float blendY = (float)(y - sampleY1) / (float)pitch;
 
-				float sampleT = (1.0f - blendX) * seed[sampleY1 * width + sampleX1] + blendX * seed[sampleY1 * width + sampleX2];
-				float sampleB = (1.0f - blendX) * seed[sampleY2 * height + sampleX1] + blendX * seed[sampleY2 * height + sampleX2];
+				float sampleT = (1.0f - blendX) * seed[sampleX1 + offX][sampleY1 + offY] + blendX * seed[sampleX2 + offX][sampleY1 + offY];
+				float sampleB = (1.0f - blendX) * seed[sampleX1 + offX][sampleY2 + offY] + blendX * seed[sampleX2 + offX][sampleY2 + offY];
 
 				scaleAcc += scale;
 				noise = (blendY * (sampleB - sampleT) + sampleT) * scale;
 				scale /= bias;
 			}
 
-			out[x + y * width] = noise / scaleAcc;
+			out[x][y] = noise / scaleAcc;
 		}
 }

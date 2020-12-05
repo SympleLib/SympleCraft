@@ -1,13 +1,44 @@
 #include <pch.h>
 #include "SympleCraft/World/Chunk.h"
 
-#include <time.h>
-#include <stdlib.h>
 #include <gl/glew.h>
 
 #include "SympleCraft/Math/Vector.h"
 #include "SympleCraft/Util/List.h"
 #include "SympleCraft/Util/Noise.h"
+
+static float** RandMap = NULL;
+static float** ChunkMap = NULL;
+
+void GenerateChunkMap(long long width, long long height)
+{
+	float** newRandMap = realloc(RandMap, width * CHUNK_SIZE_X * sizeof(float*));
+	assert(newRandMap);
+	free(RandMap);
+	RandMap = newRandMap;
+	assert(RandMap);
+
+	float** newChunkMap = realloc(ChunkMap, width * CHUNK_SIZE_X * sizeof(float*));
+	assert(newChunkMap);
+	free(ChunkMap);
+	ChunkMap = newChunkMap;
+	assert(ChunkMap);
+
+	srand(time(0));
+	for (size_t i = 0; i < width * CHUNK_SIZE_X; i++)
+	{
+		RandMap[i] = malloc(height * CHUNK_SIZE_Z * sizeof(float));
+		assert(RandMap[i]);
+
+		ChunkMap[i] = malloc(height * CHUNK_SIZE_Z * sizeof(float));
+		assert(ChunkMap[i]);
+
+		for (size_t j = 0; j < height * CHUNK_SIZE_Z; j++)
+			RandMap[i][j] = (float)rand() / (float)RAND_MAX;
+	}
+
+	GetNoise(width * CHUNK_SIZE_X, height * CHUNK_SIZE_Z, RandMap, 0, 0, 2, 0.00002, ChunkMap);
+}
 
 Chunk CreateChunk(int x, int y)
 {
@@ -18,6 +49,7 @@ Chunk CreateChunk(int x, int y)
 	chunk->X = x;
 	chunk->Y = y;
 	chunk->Mesh = CreateMesh(NULL, NULL, 0, 0);
+	chunk->Transform = CreateTransformRef(CreateVector3(x * CHUNK_SIZE_X, 0, y * CHUNK_SIZE_Z), CreateVector(), CreateVector1(1));
 	chunk->Blocks = malloc(CHUNK_SIZE_X * sizeof(Block**));
 	if (!chunk->Blocks)
 		return NULL;
@@ -72,16 +104,10 @@ void DeleteChunk(const Chunk chunk)
 
 void GenerateChunk(const Chunk chunk)
 {
-	float seed[CHUNK_SIZE_XZ];
-	float noise[CHUNK_SIZE_XZ];
-
-	for (int i = 0; i < CHUNK_SIZE_XZ; i++)
-		seed[i] = (float)rand() / (float)RAND_MAX;
-	GetNoise(CHUNK_SIZE_X, CHUNK_SIZE_Z, seed, 2, 0.2, noise);
 	for (int z = 0; z < CHUNK_SIZE_Z; z++)
 		for (int x = 0; x < CHUNK_SIZE_X; x++)
 		{
-			int y = (int)(noise[x + z * CHUNK_SIZE_X] * CHUNK_SIZE_Y);
+			int y = (int)(ChunkMap[x + chunk->X * CHUNK_SIZE_X][z + chunk->Y * CHUNK_SIZE_Z] * CHUNK_SIZE_Y);
 			for (int by = 0; by < CHUNK_SIZE_Y; by++)
 			{
 				if (by > y)
@@ -165,7 +191,7 @@ void GenerateChunkMesh(const Chunk chunk)
 		}
 	}
 
-	SetMesh(chunk->Mesh, vertices->Data, indices->Data, vertices->Size, indices->Size / 3);
+	SetMesh(chunk->Mesh, vertices->Data, indices->Data, vertices->Size / 3, indices->Size / 3);
 
 	DeleteList(vertices);
 	DeleteList(indices);
