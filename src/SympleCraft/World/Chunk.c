@@ -78,7 +78,7 @@ void GenerateChunk(const Chunk chunk)
 	srand(time(NULL));
 	for (int i = 0; i < CHUNK_SIZE_XZ; i++)
 		seed[i] = (float)rand() / (float)RAND_MAX;
-	GetNoise(CHUNK_SIZE_X, CHUNK_SIZE_Z, seed, 4, 2.2, noise);
+	GetNoise(CHUNK_SIZE_X, CHUNK_SIZE_Z, seed, 2, 0.2, noise);
 	for (int z = 0; z < CHUNK_SIZE_Z; z++)
 		for (int x = 0; x < CHUNK_SIZE_X; x++)
 		{
@@ -136,6 +136,8 @@ void GenerateChunkMesh(const Chunk chunk)
 		{
 			for (size_t l = 0; l < CHUNK_SIZE_Z; l++)
 			{
+				printf("Block [%zd, %zd, %zd]: %s!\n", i, j, l, chunk->Blocks[i][j][l]->IsTransparent ? "Air" : "Grass");
+
 				if (!chunk->Blocks[i][j][l]->IsTransparent)
 				{
 					Vector bl = CreateVector3(i, j, l);

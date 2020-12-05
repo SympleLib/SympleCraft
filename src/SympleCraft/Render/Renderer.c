@@ -21,8 +21,8 @@ void Render(const Mesh mesh, const Shader shader)
 	if (!dotCol)
 		dotCol = CreateVector3(1, 0, 0);
 
-	glEnableVertexAttribArray(0);
 	BindMesh(mesh);
+	glEnableVertexAttribArray(0);
 
 	SetShaderUniformVec(shader, "uCol", faceCol);
 	glDrawElements(GL_TRIANGLES, mesh->tCount * 3, GL_UNSIGNED_INT, 0);
