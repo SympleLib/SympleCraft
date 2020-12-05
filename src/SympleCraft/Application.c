@@ -109,6 +109,9 @@ int main()
 			{
 				Matrix view = CameraView(camera);
 				Vector forward = FindForward(view);
+				forward->y = 0;
+				forward->w = 0;
+				NormalizeVector(forward);
 				camera->Transform->Translation->x -= forward->x * 0.3;
 				camera->Transform->Translation->z -= forward->z * 0.3;
 				DeleteVector(forward);
@@ -118,6 +121,9 @@ int main()
 			{
 				Matrix view = CameraView(camera);
 				Vector forward = FindForward(view);
+				forward->y = 0;
+				forward->w = 0;
+				NormalizeVector(forward);
 				camera->Transform->Translation->x += forward->x * 0.3;
 				camera->Transform->Translation->z += forward->z * 0.3;
 				DeleteVector(forward);
@@ -128,6 +134,9 @@ int main()
 			{
 				Matrix view = CameraView(camera);
 				Vector right = FindRight(view);
+				right->y = 0;
+				right->w = 0;
+				NormalizeVector(right);
 				camera->Transform->Translation->x -= right->x * 0.3;
 				camera->Transform->Translation->z -= right->z * 0.3;
 				DeleteVector(right);
@@ -137,6 +146,9 @@ int main()
 			{
 				Matrix view = CameraView(camera);
 				Vector right = FindRight(view);
+				right->y = 0;
+				right->w = 0;
+				NormalizeVector(right);
 				camera->Transform->Translation->x += right->x * 0.3;
 				camera->Transform->Translation->z += right->z * 0.3;
 				DeleteVector(right);

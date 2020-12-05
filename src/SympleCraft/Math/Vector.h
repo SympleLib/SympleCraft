@@ -41,4 +41,9 @@ Vector SubVector(const Vector left, const Vector right);
 Vector MulVector(const Vector vector, float val);
 Vector DivVector(const Vector vector, float val);
 
+float VectorMag(const Vector vector);
+float VectorMagSqr(const Vector vector);
+void NormalizeVector(Vector vector);
+Vector NormalizedVector(const Vector vector);
+
 void PrintVector(const Vector vector);

@@ -1,7 +1,7 @@
 #include <pch.h>
 #include "SympleCraft/Math/Vector.h"
 
-#include <stdio.h>
+#include <math.h>
 
 const Vector const ZeroVector = &(struct Vector) { 0, 0, 0, 0 };
 const Vector const OneVector = &(struct Vector) { 1, 1, 1, 1 };
@@ -89,6 +89,30 @@ Vector MulVector(const Vector vector, float val)
 Vector DivVector(const Vector vector, float val)
 {
 	return CreateVector4(vector->x / val, vector->y / val, vector->z / val, vector->w / val);
+}
+
+float VectorMag(const Vector vector)
+{
+	return sqrtf(VectorMagSqr(vector));
+}
+
+float VectorMagSqr(const Vector vector)
+{
+	return vector->x * vector->x + vector->y * vector->y + vector->z * vector->z + vector->w * vector->w;
+}
+
+void NormalizeVector(Vector vector)
+{
+	float mag = VectorMag(vector);
+	vector->x /= mag;
+	vector->y /= mag;
+	vector->z /= mag;
+	vector->w /= mag;
+}
+
+Vector NormalizedVector(const Vector vector)
+{
+	return DivVector(vector, VectorMag(vector));
 }
 
 void PrintVector(const Vector vector)
