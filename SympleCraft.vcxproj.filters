@@ -53,6 +53,8 @@
     </ClInclude>
     <ClInclude Include="src\pch.h" />
     <ClInclude Include="src\SympleCraft\Util\Noise.h" />
+    <ClInclude Include="src\SympleCraft\World\World.h" />
+    <ClInclude Include="src\SympleCraft\Util\Map.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\SympleCraft\Application.c">
@@ -90,5 +92,7 @@
     </ClCompile>
     <ClCompile Include="src\pch.c" />
     <ClCompile Include="src\SympleCraft\Util\Noise.c" />
+    <ClCompile Include="src\SympleCraft\World\World.c" />
+    <ClCompile Include="src\SympleCraft\Util\Map.c" />
   </ItemGroup>
 </Project>

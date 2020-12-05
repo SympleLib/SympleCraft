@@ -13,6 +13,7 @@
 #include "SympleCraft/Window.h"
 #include "SympleCraft/World/Chunk.h"
 #include "SympleCraft/World/Transform.h"
+#include "SympleCraft/World/World.h"
 
 #define PI 3.141592653596
 
@@ -49,23 +50,11 @@ int main()
 	fprintf(stdout, "[#]<GLEW version>: %s\n", glewGetString(GLEW_VERSION));
 	fprintf(stdout, "[#]<OpenGL version>: %s\n", glGetString(GL_VERSION));
 
-	GenerateChunkMap(2, 2);
-
-	Chunk chunk00 = CreateChunk(0, 0);
-	GenerateChunk(chunk00);
-	GenerateChunkMesh(chunk00);
-
-	Chunk chunk10 = CreateChunk(1, 0);
-	GenerateChunk(chunk10);
-	GenerateChunkMesh(chunk10);
-
-	Chunk chunk11 = CreateChunk(1, 1);
-	GenerateChunk(chunk11);
-	GenerateChunkMesh(chunk11);
-
-	Chunk chunk01 = CreateChunk(0, 1);
-	GenerateChunk(chunk01);
-	GenerateChunkMesh(chunk01);
+	World world = CreateWorld(2, 2);
+	WorldGenerateChunk(world, 0, 0);
+	WorldGenerateChunk(world, 0, 1);
+	WorldGenerateChunk(world, 1, 0);
+	WorldGenerateChunk(world, 1, 1);
 
 	shader = CreateShader("res/shaders/main.vsh", "res/shaders/main.fsh");
 	BindShader(shader);
@@ -162,43 +151,14 @@ int main()
 			}
 		}
 
-		{
-			Matrix model = TransformToMatrix(chunk00->Transform);
-			SetShaderUniformMat(shader, "uModel", model);
-			DeleteMatrix(model);
-		}
-		Render(chunk00->Mesh, shader);
-
-		{
-			Matrix model = TransformToMatrix(chunk10->Transform);
-			SetShaderUniformMat(shader, "uModel", model);
-			DeleteMatrix(model);
-		}
-		Render(chunk10->Mesh, shader);
-
-		{
-			Matrix model = TransformToMatrix(chunk11->Transform);
-			SetShaderUniformMat(shader, "uModel", model);
-			DeleteMatrix(model);
-		}
-		Render(chunk11->Mesh, shader);
-
-		{
-			Matrix model = TransformToMatrix(chunk01->Transform);
-			SetShaderUniformMat(shader, "uModel", model);
-			DeleteMatrix(model);
-		}
-		Render(chunk01->Mesh, shader);
+		RenderWorld(world, shader);
 
 		UpdateMainWindow();
 	}
 	DeleteTransform(modelTransform);
 	DeleteCamera(camera);
 	DeleteShader(shader);
-	DeleteChunk(chunk00);
-	DeleteChunk(chunk10);
-	DeleteChunk(chunk11);
-	DeleteChunk(chunk01);
+	DeleteWorld(world);
 
 	DestroyMainWindow();
 	
