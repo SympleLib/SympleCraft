@@ -99,7 +99,7 @@ void DeleteChunk(const Chunk chunk)
 	}
 	free(chunk->Blocks);
 	free(chunk->Mesh);
-	free(chunk);
+	//free(chunk);
 }
 
 void GenerateChunk(const Chunk chunk)

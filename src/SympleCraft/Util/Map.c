@@ -22,7 +22,7 @@ void DeleteMap(const Map map)
 void MapInsert(Map map, const char* key, const char* val)
 {
 	size_t index = ListFindIndex(map->Keys, key);
-	if (index == -1)
+	if (index == -1 || true)
 	{
 		ListPushItem(map->Keys, key);
 		ListPushItem(map->Values, val);
