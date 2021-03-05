@@ -39,12 +39,16 @@ void MapRemove(Map map, const char* key)
 	ListRemoveItem(map->Values, index);
 }
 
-long long MapKeyIndex(Map map, const char* key)
+const char *MapGet(Map map, const char *key)
 {
-	return ListFindIndex(map->Keys, key);
+	size_t index = ListFindIndex(map->Keys, key);
+	if (index == -1)
+		return NULL;
+	return ListGetItem(map->Values, index);
 }
 
+long long MapKeyIndex(Map map, const char* key)
+{ return ListFindIndex(map->Keys, key); }
+
 long long MapValIndex(Map map, const char* val)
-{
-	return ListFindIndex(map->Values, val);
-}
+{ return ListFindIndex(map->Values, val); }

@@ -11,8 +11,9 @@ typedef struct Map
 Map CreateMap(long long keySize, long long valSize);
 void DeleteMap(const Map map);
 
-void MapInsert(Map map, const char* key, const char* val);
-void MapRemove(Map map, const char* key);
+void MapInsert(Map map, const char *key, const char *val);
+void MapRemove(Map map, const char *key);
+const char *MapGet(Map map, const char *key);
 
-long long MapKeyIndex(Map map, const char* key);
-long long MapValIndex(Map map, const char* val);
+long long MapKeyIndex(Map map, const char *key);
+long long MapValIndex(Map map, const char *val);

@@ -55,6 +55,7 @@ int main()
 	WorldGenerateChunk(world, 0, 1);
 	WorldGenerateChunk(world, 1, 0);
 	WorldGenerateChunk(world, 1, 1);
+	WorldGenerateChunkMeshes(world);
 
 	shader = CreateShader("res/shaders/main.vsh", "res/shaders/main.fsh");
 	BindShader(shader);

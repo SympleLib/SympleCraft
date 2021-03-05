@@ -13,9 +13,11 @@
 typedef struct Chunk
 {
 	int X, Y;
-	Block*** Blocks;
+	Block ***Blocks;
 	Mesh Mesh;
 	Transform Transform;
+
+	struct World *World;
 } *Chunk;
 
 void GenerateChunkMap(int width, int height);

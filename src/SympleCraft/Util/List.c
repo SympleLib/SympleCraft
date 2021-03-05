@@ -72,14 +72,10 @@ void ListShiftItem(List list)
 }
 
 void ListPopItem(List list)
-{
-	list->Size--;
-}
+{ list->Size--; }
 
 char* ListGetItem(const List list, long long index)
-{
-	return &list->Data[index * list->ElementSize];
-}
+{ return &list->Data[index * list->ElementSize]; }
 
 void ListSetItem(List list, long long index, const char* item)
 {
@@ -92,8 +88,11 @@ long long ListFindIndex(const List list, const char* item)
 {
 	for (size_t i = 0; i < list->Size * list->ElementSize; i += list->ElementSize)
 		if (list->Data[i] == item[0])
+		{
 			for (size_t j = 0; j < list->ElementSize; j++)
-				if (list->Data[i + j] == item[j])
-					return i / list->ElementSize;
+				if (list->Data[i + j] != item[j])
+					return -1;
+			return i / list->ElementSize;
+		}
 	return -1;
 }

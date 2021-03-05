@@ -13,5 +13,6 @@ void DeleteWorld(const World world);
 
 void RenderWorld(const World world, const Shader shader);
 void WorldGenerateChunk(World world, int x, int y);
+void WorldGenerateChunkMeshes(World world);
 
 void WorldReGenerate(World world);

@@ -3,6 +3,7 @@
 
 #include <gl/glew.h>
 
+#include "SympleCraft/World/World.h"
 #include "SympleCraft/Math/Vector.h"
 #include "SympleCraft/Util/List.h"
 #include "SympleCraft/Util/Noise.h"
@@ -166,10 +167,36 @@ void GenerateChunkMesh(const Chunk chunk)
 					Vector bl = CreateVector3(i, j, l);
 					Vector ibl = CreateVector3(i + 1, j + 1, l + 1);
 
-					if (l == 0 || chunk->Blocks[i][j][l - 1]->IsTransparent)
+					if (l == 0)
+					{
+						Vector nextChunkPos = CreateVector2(chunk->X, chunk->Y - 1);
+						Chunk nextChunk = MapGet(chunk->World->Chunks, nextChunkPos);
+						DeleteVector(nextChunkPos);
+						if (nextChunk)
+						{
+							if (nextChunk->Blocks[i][j][CHUNK_SIZE_Z - 1]->IsTransparent)
+								BuildFace(vertices, indices, bl, RightVector, UpVector);
+						}
+						else
+							BuildFace(vertices, indices, bl, RightVector, UpVector);
+					}
+					else if (chunk->Blocks[i][j][l - 1]->IsTransparent)
 						BuildFace(vertices, indices, bl, RightVector, UpVector);
 
-					if (i == 0 || chunk->Blocks[i - 1][j][l]->IsTransparent)
+					if (i == 0)
+					{
+						Vector nextChunkPos = CreateVector2(chunk->X - 1, chunk->Y);
+						Chunk nextChunk = MapGet(chunk->World->Chunks, nextChunkPos);
+						DeleteVector(nextChunkPos);
+						if (nextChunk)
+						{
+							if (nextChunk->Blocks[CHUNK_SIZE_X - 1][j][l]->IsTransparent)
+								BuildFace(vertices, indices, bl, UpVector, ForwardVector);
+						}
+						else
+							BuildFace(vertices, indices, bl, UpVector, ForwardVector);
+					}
+					else if (chunk->Blocks[i - 1][j][l]->IsTransparent)
 						BuildFace(vertices, indices, bl, UpVector, ForwardVector);
 
 					if (j == 0 || chunk->Blocks[i][j - 1][l]->IsTransparent)
@@ -178,10 +205,36 @@ void GenerateChunkMesh(const Chunk chunk)
 					if (j == CHUNK_SIZE_Y - 1 || chunk->Blocks[i][j + 1][l]->IsTransparent)
 						BuildFace(vertices, indices, ibl, LeftVector, BackwardVector);
 
-					if (i == CHUNK_SIZE_X - 1 || chunk->Blocks[i + 1][j][l]->IsTransparent)
+					if (i == CHUNK_SIZE_X - 1)
+					{
+						Vector nextChunkPos = CreateVector2(chunk->X + 1, chunk->Y);
+						Chunk nextChunk = MapGet(chunk->World->Chunks, nextChunkPos);
+						DeleteVector(nextChunkPos);
+						if (nextChunk)
+						{
+							if (nextChunk->Blocks[i][j][0]->IsTransparent)
+								BuildFace(vertices, indices, ibl, BackwardVector, DownVector);
+						}
+						else
+							BuildFace(vertices, indices, ibl, BackwardVector, DownVector);
+					}
+					else if (chunk->Blocks[i + 1][j][l]->IsTransparent)
 						BuildFace(vertices, indices, ibl, BackwardVector, DownVector);
 
-					if (l == CHUNK_SIZE_Z - 1 || chunk->Blocks[i][j][l + 1]->IsTransparent)
+					if (l == CHUNK_SIZE_Z - 1)
+					{
+						Vector nextChunkPos = CreateVector2(chunk->X, chunk->Y + 1);
+						Chunk nextChunk = MapGet(chunk->World->Chunks, nextChunkPos);
+						DeleteVector(nextChunkPos);
+						if (nextChunk)
+						{
+							if (nextChunk->Blocks[i][j][0]->IsTransparent)
+								BuildFace(vertices, indices, ibl, DownVector, LeftVector);
+						}
+						else
+							BuildFace(vertices, indices, ibl, DownVector, LeftVector);
+					}
+					else if (chunk->Blocks[i][j][l + 1]->IsTransparent)
 						BuildFace(vertices, indices, ibl, DownVector, LeftVector);
 
 					DeleteVector(ibl);

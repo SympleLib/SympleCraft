@@ -39,8 +39,18 @@ void WorldGenerateChunk(World world, int x, int y)
 {
 	Vector chunkPosVec = CreateVector2(x, y);
 	Chunk chunk = CreateChunk(x, y);
+	chunk->World = world;
 	GenerateChunk(chunk);
-	GenerateChunkMesh(chunk);
 	MapInsert(world->Chunks, chunkPosVec, chunk);
 	DeleteVector(chunkPosVec);
+}
+
+void WorldGenerateChunkMeshes(World world)
+{
+	for (size_t i = 0; i < world->Chunks->Values->Size; i++)
+	{
+		Chunk chunk = (Chunk)ListGetItem(world->Chunks->Values, i);
+		printf("Generating Chunk Mesh at { %i, %i }\n", chunk->X, chunk->Y);
+		GenerateChunkMesh(chunk);
+	}
 }
