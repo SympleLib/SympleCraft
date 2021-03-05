@@ -20,7 +20,7 @@ typedef struct Chunk
 	struct World *World;
 } *Chunk;
 
-void GenerateChunkMap(int width, int height);
+void GenerateChunkMap(long long width, long long height);
 
 Chunk CreateChunk(int x, int y);
 void DeleteChunk(const Chunk chunk);

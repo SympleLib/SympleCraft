@@ -50,11 +50,12 @@ int main()
 	fprintf(stdout, "[#]<GLEW version>: %s\n", glewGetString(GLEW_VERSION));
 	fprintf(stdout, "[#]<OpenGL version>: %s\n", glGetString(GL_VERSION));
 
-	World world = CreateWorld(2, 2);
+	World world = CreateWorld(3, 3);
 	WorldGenerateChunk(world, 0, 0);
 	WorldGenerateChunk(world, 0, 1);
 	WorldGenerateChunk(world, 1, 0);
-	WorldGenerateChunk(world, 1, 1);
+	WorldGenerateChunk(world, 2, 0);
+	//WorldGenerateChunk(world, 1, 1);
 	WorldGenerateChunkMeshes(world);
 
 	shader = CreateShader("res/shaders/main.vsh", "res/shaders/main.fsh");
